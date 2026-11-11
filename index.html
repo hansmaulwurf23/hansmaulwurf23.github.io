@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Lern-Apps für Kinder</title>
-  <meta name="description" content="Kleine Übungs-Apps für die Grundschule: Lesen (Blitzlesen) und Zahlen (Kopfrechnen). Kostenlos, ohne Werbung, ohne Konto.">
+  <meta name="description" content="Kleine Übungs-Apps für Kinder: Lesen (Blitzlesen), Zahlen (Kopfrechnen) und Dingsbums (Wörter raten). Kostenlos, ohne Werbung, ohne Konto.">
   <meta name="theme-color" content="#FDF8F0" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#15161C" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
@@ -24,6 +24,8 @@
       --lesen-ink: #FFFFFF;
       --zahlen: #1E88E5;
       --zahlen-ink: #FFFFFF;
+      --dingsbums: #C9A92C;
+      --dingsbums-ink: #26262E;
       --shadow: 0 2px 6px rgba(40, 30, 10, .12);
       color-scheme: light;
     }
@@ -70,6 +72,7 @@
     }
     .app.lesen { --c: var(--lesen); --ink: var(--lesen-ink); }
     .app.zahlen { --c: var(--zahlen); --ink: var(--zahlen-ink); }
+    .app.dingsbums { --c: var(--dingsbums); --ink: var(--dingsbums-ink); }
     .head { display: flex; align-items: center; gap: 14px; }
     .head img { width: 64px; height: 64px; border-radius: 16px; flex: none; box-shadow: var(--shadow); }
     h2 { margin: 0; font-size: 26px; line-height: 1.1; }
@@ -107,7 +110,7 @@
   <header>
     <h1>Lern-Apps für Kinder</h1>
     <p class="lead">Kleine Übungs-Apps für die Grundschule, entstanden für den Hausgebrauch: kurze
-      Runden, große Tasten, eine Bestenliste. Kostenlos, ohne Werbung und ohne Konto – gespeichert
+      Runden, große Tasten, Bestenliste oder Statistik. Kostenlos, ohne Werbung und ohne Konto – gespeichert
       wird nur auf dem eigenen Gerät.</p>
   </header>
 
@@ -163,6 +166,32 @@
         <a class="btn" href="https://github.com/hansmaulwurf23/kopfrechnen/blob/main/docs/README.md">Mehr dazu</a>
       </div>
     </section>
+
+    <section class="app dingsbums" aria-labelledby="dingsbums">
+      <div class="head">
+        <img src="icons/dingsbums.svg" alt="">
+        <div>
+          <h2 id="dingsbums">Dingsbums</h2>
+          <p class="kind">Wörter raten · für Android</p>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <p>Ein Wort mit fünf Buchstaben in sechs Versuchen erraten – grün, gelb und grau zeigen,
+            wie nah man dran ist.</p>
+          <ul>
+            <li>Für Kinder, die schon sicher lesen und schreiben</li>
+            <li>Kindgerechte Wörter, Umlaute auf der Tastatur</li>
+            <li>Statistik mit Serien, läuft auch auf dem Fire-HD-Kids-Tablet</li>
+          </ul>
+        </div>
+        <img class="shot" src="bilder/dingsbums.jpg" alt="Gelöstes Spielfeld von Dingsbums" width="400" height="898" loading="lazy">
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/hansmaulwurf23/dingsbums/releases/latest">Android-App</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/dingsbums/blob/main/docs/README.md">Mehr dazu</a>
+      </div>
+    </section>
   </div>
 
   <footer>
@@ -172,7 +201,8 @@
     <p>Die Web-App lässt sich wie eine App auf den Startbildschirm legen und läuft dann auch ohne
       Internet.</p>
     <p>Quellcode: <a href="https://github.com/hansmaulwurf23/blitzlesen">blitzlesen</a> ·
-      <a href="https://github.com/hansmaulwurf23/kopfrechnen">kopfrechnen</a></p>
+      <a href="https://github.com/hansmaulwurf23/kopfrechnen">kopfrechnen</a> ·
+      <a href="https://github.com/hansmaulwurf23/dingsbums">dingsbums</a></p>
   </footer>
 </main>
 </body>
