@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Lern-Apps für Kinder</title>
+  <meta name="description" content="Kleine Übungs-Apps für die Grundschule: Lesen (Blitzlesen) und Zahlen (Kopfrechnen). Kostenlos, ohne Werbung, ohne Konto.">
+  <meta name="theme-color" content="#FDF8F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15161C" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <!-- Bewusst ohne JavaScript, Service Worker und localStorage: Die Seite teilt sich die Domain mit
+       den Web-Apps unter /blitzlesen/ usw. und soll deren Speicher nie berühren. -->
+  <style>
+    /* Farben wie in den Apps (colors.xml / web/app.css). */
+    :root {
+      --bg: #FDF8F0;
+      --surface: #FFFFFF;
+      --text: #26262E;
+      --text2: #6B6B76;
+      --divider: #E6E0D6;
+      --border: #E0DAD0;
+      --lesen: #43A047;
+      --lesen-ink: #FFFFFF;
+      --zahlen: #1E88E5;
+      --zahlen-ink: #FFFFFF;
+      --shadow: 0 2px 6px rgba(40, 30, 10, .12);
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15161C;
+        --surface: #22232B;
+        --text: #F2F2F5;
+        --text2: #A2A2AE;
+        --divider: #363742;
+        --border: #3A3B46;
+        --shadow: 0 2px 6px rgba(0, 0, 0, .4);
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: max(32px, env(safe-area-inset-top)) 16px 24px;
+    }
+    header { margin-bottom: 28px; }
+    h1 { font-size: clamp(28px, 6vw, 40px); line-height: 1.15; margin: 0 0 10px; letter-spacing: -.01em; }
+    .lead { color: var(--text2); margin: 0; max-width: 40em; }
+    .apps { display: grid; gap: 20px; }
+    @media (min-width: 760px) { .apps { grid-template-columns: 1fr 1fr; } }
+    .app {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-top: 6px solid var(--c);
+    }
+    .app.lesen { --c: var(--lesen); --ink: var(--lesen-ink); }
+    .app.zahlen { --c: var(--zahlen); --ink: var(--zahlen-ink); }
+    .head { display: flex; align-items: center; gap: 14px; }
+    .head img { width: 64px; height: 64px; border-radius: 16px; flex: none; box-shadow: var(--shadow); }
+    h2 { margin: 0; font-size: 26px; line-height: 1.1; }
+    .kind { margin: 2px 0 0; color: var(--text2); font-size: 15px; }
+    .body { display: flex; gap: 16px; align-items: flex-start; }
+    .body p { margin: 0 0 8px; }
+    .body ul { margin: 0; padding-left: 1.1em; color: var(--text2); font-size: 15px; }
+    .body li { margin: 2px 0; }
+    .shot {
+      width: 120px; height: auto; flex: none; border-radius: 12px; border: 1px solid var(--border);
+      aspect-ratio: 400 / 898; object-fit: cover; background: var(--bg);
+    }
+    @media (max-width: 400px) { .shot { display: none; } }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; padding: 10px 16px; border-radius: 12px;
+      font-weight: 600; text-decoration: none; font-size: 16px;
+      border: 2px solid var(--c); color: var(--text);
+    }
+    .btn.primary { background: var(--c); color: var(--ink); }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+    .small { color: var(--text2); font-size: 14px; margin: 0; }
+    footer {
+      margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--divider);
+      color: var(--text2); font-size: 15px;
+    }
+    footer p { margin: 0 0 8px; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Lern-Apps für Kinder</h1>
+    <p class="lead">Kleine Übungs-Apps für die Grundschule, entstanden für den Hausgebrauch: kurze
+      Runden, große Tasten, eine Bestenliste. Kostenlos, ohne Werbung und ohne Konto – gespeichert
+      wird nur auf dem eigenen Gerät.</p>
+  </header>
+
+  <div class="apps">
+    <section class="app lesen" aria-labelledby="lesen">
+      <div class="head">
+        <img src="icons/lesen.svg" alt="">
+        <div>
+          <h2 id="lesen">Lesen</h2>
+          <p class="kind">Blitzlesen · im Browser und für Android</p>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <p>Eine Minute lang Wortkarten lesen und selbst einsortieren: <b>Kann ich!</b> oder
+            <b>Hakt noch</b>.</p>
+          <ul>
+            <li>100 häufige Wörter, weitere Listen folgen</li>
+            <li>Lesezeit je Wort, Stapel und Bestenliste</li>
+            <li>Nach der Wortkartei von Die Lernheldin</li>
+          </ul>
+        </div>
+        <img class="shot" src="bilder/lesen.jpg" alt="Startbildschirm von Lesen" width="400" height="898" loading="lazy">
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="blitzlesen/">Im Browser öffnen</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/blitzlesen/releases/latest">Android-App</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/blitzlesen/blob/main/docs/README.md">Mehr dazu</a>
+      </div>
+    </section>
+
+    <section class="app zahlen" aria-labelledby="zahlen">
+      <div class="head">
+        <img src="icons/zahlen.svg" alt="">
+        <div>
+          <h2 id="zahlen">Zahlen</h2>
+          <p class="kind">Kopfrechnen · für Android</p>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <p>Zehn Aufgaben je Runde, mit Zeit und Punkten – leicht, mittel oder schwer.</p>
+          <ul>
+            <li>Plus &amp; Minus, Einmaleins, Geteilt, Platzhalter</li>
+            <li>Großes Ziffernfeld, sofortige Rückmeldung</li>
+            <li>Läuft auch auf dem Fire-HD-Kids-Tablet</li>
+          </ul>
+        </div>
+        <img class="shot" src="bilder/zahlen.jpg" alt="Startbildschirm von Zahlen" width="400" height="898" loading="lazy">
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/hansmaulwurf23/kopfrechnen/releases/latest">Android-App</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/kopfrechnen/blob/main/docs/README.md">Mehr dazu</a>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p><b>Android-App installieren:</b> Unter „Android-App“ die APK-Datei herunterladen und öffnen.
+      Android fragt einmal, ob Apps aus dieser Quelle installiert werden dürfen. Die Apps sind nicht
+      im Play Store und melden neue Versionen selbst.</p>
+    <p>Die Web-App lässt sich wie eine App auf den Startbildschirm legen und läuft dann auch ohne
+      Internet.</p>
+    <p>Quellcode: <a href="https://github.com/hansmaulwurf23/blitzlesen">blitzlesen</a> ·
+      <a href="https://github.com/hansmaulwurf23/kopfrechnen">kopfrechnen</a></p>
+  </footer>
+</main>
+</body>
+</html>
