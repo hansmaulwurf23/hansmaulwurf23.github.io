@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Spiele</title>
+  <meta name="description" content="Dingsbums (Wörter raten) und Spielblöcke für Qwixx und Yorinde im Browser. Kostenlos, ohne Werbung, ohne Konto.">
+  <meta name="theme-color" content="#FDF8F0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#15161C" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <!-- Wie index.html bewusst ohne JavaScript, Service Worker und localStorage: Die Seite teilt sich
+       die Domain mit den Web-Apps unter /qwixx/ und /yorinde/ und soll deren Speicher nie berühren. -->
+  <style>
+    /* Gerüst wie index.html, Akzentfarben passend zu den Spielen. */
+    :root {
+      --bg: #FDF8F0;
+      --surface: #FFFFFF;
+      --text: #26262E;
+      --text2: #6B6B76;
+      --divider: #E6E0D6;
+      --border: #E0DAD0;
+      --dingsbums: #C9A92C;
+      --dingsbums-ink: #26262E;
+      --qwixx: #DC3545;
+      --qwixx-ink: #FFFFFF;
+      --yorinde: #7B4BB7;
+      --yorinde-ink: #FFFFFF;
+      --shadow: 0 2px 6px rgba(40, 30, 10, .12);
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15161C;
+        --surface: #22232B;
+        --text: #F2F2F5;
+        --text2: #A2A2AE;
+        --divider: #363742;
+        --border: #3A3B46;
+        --shadow: 0 2px 6px rgba(0, 0, 0, .4);
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 17px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: max(32px, env(safe-area-inset-top)) 16px 24px;
+    }
+    header { margin-bottom: 28px; }
+    .back { display: inline-block; margin-bottom: 14px; color: var(--text2); font-size: 15px; }
+    h1 { font-size: clamp(28px, 6vw, 40px); line-height: 1.15; margin: 0 0 10px; letter-spacing: -.01em; }
+    .lead { color: var(--text2); margin: 0; max-width: 40em; }
+    .apps { display: grid; gap: 20px; }
+    @media (min-width: 760px) { .apps { grid-template-columns: 1fr 1fr; } }
+    .app {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border-top: 6px solid var(--c);
+    }
+    .app.dingsbums { --c: var(--dingsbums); --ink: var(--dingsbums-ink); }
+    .app.qwixx { --c: var(--qwixx); --ink: var(--qwixx-ink); }
+    .app.yorinde { --c: var(--yorinde); --ink: var(--yorinde-ink); }
+    /* Qwixx läuft im Querformat: Bild über die ganze Kartenbreite statt schmal daneben. */
+    .wide {
+      width: 100%; height: auto; display: block; border-radius: 12px; border: 1px solid var(--border);
+      aspect-ratio: 808 / 360; background: var(--bg);
+    }
+    .app.qwixx-span { grid-column: 1 / -1; }
+    .head { display: flex; align-items: center; gap: 14px; }
+    .head img { width: 64px; height: 64px; border-radius: 16px; flex: none; box-shadow: var(--shadow); }
+    h2 { margin: 0; font-size: 26px; line-height: 1.1; }
+    .kind { margin: 2px 0 0; color: var(--text2); font-size: 15px; }
+    .body { display: flex; gap: 16px; align-items: flex-start; }
+    .body p { margin: 0 0 8px; }
+    .body ul { margin: 0; padding-left: 1.1em; color: var(--text2); font-size: 15px; }
+    .body li { margin: 2px 0; }
+    .shot {
+      width: 120px; height: auto; flex: none; border-radius: 12px; border: 1px solid var(--border);
+      aspect-ratio: 400 / 898; object-fit: cover; background: var(--bg);
+    }
+    @media (max-width: 400px) { .shot { display: none; } }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-height: 44px; padding: 10px 16px; border-radius: 12px;
+      font-weight: 600; text-decoration: none; font-size: 16px;
+      border: 2px solid var(--c); color: var(--text);
+    }
+    .btn.primary { background: var(--c); color: var(--ink); }
+    .btn:hover { filter: brightness(1.06); }
+    .btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+    .small { color: var(--text2); font-size: 14px; margin: 0; }
+    footer {
+      margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--divider);
+      color: var(--text2); font-size: 15px;
+    }
+    footer p { margin: 0 0 8px; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <a class="back" href="./">← Lern-Apps für Kinder</a>
+    <h1>Spiele</h1>
+    <p class="lead">Ein Rätsel zum Allein-Spielen und zwei Spielblöcke für den Spieleabend, entstanden
+      für den Hausgebrauch. Kostenlos, ohne Werbung und ohne Konto – gespeichert wird nur auf dem
+      eigenen Gerät.</p>
+  </header>
+
+  <div class="apps">
+    <section class="app dingsbums" aria-labelledby="dingsbums">
+      <div class="head">
+        <img src="icons/dingsbums.svg" alt="">
+        <div>
+          <h2 id="dingsbums">Dingsbums</h2>
+          <p class="kind">Wörter raten · für Android</p>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <p>Ein deutsches Wort mit fünf Buchstaben in sechs Versuchen erraten – grün, gelb und grau zeigen, wie nah man dran ist.</p>
+          <ul>
+            <li>Bildschirmtastatur mit Umlauten</li>
+            <li>Statistik mit Serien und Versuchen</li>
+            <li>Kindgerechte Wörter, läuft auch auf dem Fire-HD-Kids-Tablet</li>
+          </ul>
+        </div>
+        <img class="shot" src="bilder/dingsbums.jpg" alt="Gelöstes Spielfeld von Dingsbums" width="400" height="898" loading="lazy">
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/hansmaulwurf23/dingsbums/releases/latest">Android-App</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/dingsbums/blob/main/docs/README.md">Mehr dazu</a>
+      </div>
+    </section>
+
+    <section class="app yorinde" aria-labelledby="yorinde">
+      <div class="head">
+        <img src="icons/yorinde.svg" alt="">
+        <div>
+          <h2 id="yorinde">Yorinde</h2>
+          <p class="kind">Würfelspiel-Block · im Browser</p>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <p>Der Block für das Würfelspiel mit fünf Würfeln – mit echten Würfeln am Tisch oder ganz auf dem Handy gewürfelt.</p>
+          <ul>
+            <li>Würfelt auf Wunsch selbst, bis zu dreimal pro Runde</li>
+            <li>Zeigt, was der Wurf in jedem Feld bringen würde</li>
+            <li>Bestenliste mit Statistik über alle Spiele</li>
+          </ul>
+        </div>
+        <img class="shot" src="bilder/yorinde.jpg" alt="Spielblock von Yorinde mit fünf Würfeln" width="400" height="898" loading="lazy">
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="yorinde/">Im Browser öffnen</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/yorinde/blob/main/docs/README.md">Mehr dazu</a>
+      </div>
+    </section>
+
+    <section class="app qwixx qwixx-span" aria-labelledby="qwixx">
+      <div class="head">
+        <img src="icons/qwixx.svg" alt="">
+        <div>
+          <h2 id="qwixx">Qwixx</h2>
+          <p class="kind">Spielblock · im Browser</p>
+        </div>
+      </div>
+      <div class="body">
+        <div>
+          <p>Ankreuzen auf dem Handy statt auf Papier: Gewürfelt wird weiter am Tisch, die Punkte rechnet die Seite selbst zusammen.</p>
+          <ul>
+            <li>Achtet darauf, dass nur rechts vom letzten Kreuz angekreuzt wird</li>
+            <li>Schlösser, Fehlwürfe und Rückgängig</li>
+            <li>Am besten im Querformat</li>
+          </ul>
+        </div>
+      </div>
+      <img class="wide" src="bilder/qwixx.jpg" alt="Qwixx-Spielblock mit angekreuzten Zahlen" width="808" height="360" loading="lazy">
+      <div class="actions">
+        <a class="btn primary" href="qwixx/">Im Browser öffnen</a>
+        <a class="btn" href="https://github.com/hansmaulwurf23/qwixx/blob/main/docs/README.md">Mehr dazu</a>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p><b>Spielblöcke:</b> Qwixx und Yorinde laufen im Browser. Über „Zum Startbildschirm hinzufügen“
+      liegen sie wie eine App auf dem Handy; der Spielstand bleibt erhalten, auch wenn man zwischendurch
+      etwas anderes macht. Das Spiel selbst ersetzen sie nicht, nur den Block.</p>
+    <p><b>Android-App installieren:</b> Unter „Android-App“ die APK-Datei herunterladen und öffnen.
+      Android fragt einmal, ob Apps aus dieser Quelle installiert werden dürfen. Dingsbums meldet neue
+      Versionen selbst.</p>
+    <p>Quellcode: <a href="https://github.com/hansmaulwurf23/dingsbums">dingsbums</a> ·
+      <a href="https://github.com/hansmaulwurf23/yorinde">yorinde</a> ·
+      <a href="https://github.com/hansmaulwurf23/qwixx">qwixx</a></p>
+    <p>Außerdem: <a href="./">Lern-Apps für Kinder</a> · <a href="alltag.html">Apps für den Alltag</a></p>
+  </footer>
+</main>
+</body>
+</html>
